@@ -1,0 +1,15 @@
+{{- $char := . }}
+<a href="{{ $char.RelPermalink }}" class="character-card">
+  {{- with $char.Params.image }}
+  {{- partial "image.html" (dict "src" . "alt" $char.Title "class" "character-card-img") }}
+  {{- else }}
+  <div class="character-card-img-placeholder">
+    {{- with $char.Params.emoji }}{{ . }}{{- else }}👤{{- end }}
+  </div>
+  {{- end }}
+  <div class="character-card-body">
+    <div class="character-card-name">{{ $char.Title }}</div>
+    {{- with $char.Params.role }}<div class="character-card-role">{{ . }}</div>{{- end }}
+    {{- with $char.Description }}<p class="character-card-desc">{{ . | truncate 80 }}</p>{{- end }}
+  </div>
+</a>

@@ -1,0 +1,8 @@
+{{- $name := .Get "name" -}}
+{{- $slug := .Get "slug" | default (urlize $name) -}}
+{{- $charPage := .Site.GetPage (printf "/characters/%s" $slug) -}}
+{{- if $charPage -}}
+<a href="{{ $charPage.RelPermalink }}" class="char-ref">{{ $name }}</a>
+{{- else -}}
+<span class="char-ref" title="Character: {{ $name }}">{{ $name }}</span>
+{{- end -}}

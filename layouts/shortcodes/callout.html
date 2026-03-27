@@ -1,0 +1,14 @@
+{{- $type := .Get "type" | default "note" -}}
+{{- $title := .Get "title" -}}
+{{- if not $title -}}
+  {{- if eq $type "note" }}{{- $title = "Note" -}}
+  {{- else if eq $type "warn" }}{{- $title = "Warning" -}}
+  {{- else if eq $type "danger" }}{{- $title = "Danger" -}}
+  {{- else if eq $type "lore" }}{{- $title = "Lore" -}}
+  {{- else }}{{- $title = $type | title -}}
+  {{- end -}}
+{{- end -}}
+<div class="inkwell-callout {{ $type }}">
+  <div class="inkwell-callout-title">{{ $title }}</div>
+  <div>{{ .Inner | markdownify }}</div>
+</div>

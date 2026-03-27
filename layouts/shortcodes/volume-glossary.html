@@ -1,0 +1,34 @@
+{{- $vol := .Get "volume" | default "" -}}
+{{- $glossarySection := .Site.GetPage "/glossary" -}}
+{{- $entries := where $glossarySection.Pages "Params.volume" $vol -}}
+{{- if $entries -}}
+<div class="glossary-volume-header">
+  <span class="glossary-volume-header-label">Volume Glossary</span>
+  <span class="glossary-volume-header-name">{{ $vol }}</span>
+</div>
+{{- $alpha := dict -}}
+{{- range $entries -}}
+  {{- $letter := upper (substr .Title 0 1) -}}
+  {{- $existing := index $alpha $letter | default slice -}}
+  {{- $alpha = merge $alpha (dict $letter ($existing | append .)) -}}
+{{- end -}}
+{{- $letters := slice "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z" -}}
+{{- range $letter := $letters -}}
+  {{- $es := index $alpha $letter -}}
+  {{- if $es -}}
+  <div class="glossary-alpha-group">
+    <div class="glossary-alpha-letter">{{ $letter }}</div>
+    {{- range $es -}}
+    <div class="glossary-entry">
+      <div class="glossary-term">{{ .Title }}</div>
+      <div class="glossary-def">{{ .Description }}
+        <a href="{{ .RelPermalink }}" style="font-size:0.78rem;color:var(--ink-accent);margin-left:0.4rem;">more →</a>
+      </div>
+    </div>
+    {{- end -}}
+  </div>
+  {{- end -}}
+{{- end -}}
+{{- else -}}
+<p style="color:var(--ink-text-muted);font-style:italic;">No glossary entries for <em>{{ $vol }}</em> yet.</p>
+{{- end -}}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang | default "en" }}" dir="ltr">
+<head>
+  {{- partial "head.html" . }}
+</head>
+<body>
+
+<div id="reading-progress"></div>
+
+<div class="inkwell-wrapper">
+
+  {{- partial "topbar.html" . }}
+
+  <aside class="inkwell-sidebar" id="inkwell-sidebar" aria-label="Navigation">
+    {{- partial "sidebar.html" . }}
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="inkwell-main">
+    <main class="inkwell-content" id="main-content">
+      {{- block "main" . }}{{- end }}
+    </main>
+    {{- partial "footer.html" . }}
+  </div>
+
+</div>
+
+{{- partial "lightbox.html" . }}
+
+<script src="{{ "js/inkwell.js" | relURL }}"></script>
+</body>
+</html>

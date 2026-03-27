@@ -1,0 +1,49 @@
+{{- $currentPage := . }}
+{{- $volumeSection := .Site.GetPage "/volumes" }}
+
+{{- if $volumeSection }}
+<div class="sidebar-section">
+  <span class="sidebar-title">Story</span>
+
+  {{- $vols := $volumeSection.Sections.ByWeight }}
+  {{- range $vols }}
+  {{- $vol := . }}
+  {{- $volID := .RelPermalink | urlize }}
+  {{- $volActive := $currentPage.IsDescendant $vol }}
+  <div class="sidebar-volume">
+    <button class="sidebar-volume-title{{ if $volActive }} active open{{ end }}"
+            aria-expanded="{{ if $volActive }}true{{ else }}false{{ end }}"
+            aria-controls="vol-{{ $volID }}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-volume-chevron">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+      {{ $vol.Title }}
+    </button>
+    <ul class="sidebar-chapters{{ if $volActive }} open{{ end }}" id="vol-{{ $volID }}">
+      {{- $chapters := $vol.Pages.ByWeight }}
+      {{- range $chapters }}
+      <li>
+        <a href="{{ .RelPermalink }}"
+           class="sidebar-chapter-link{{ if eq $currentPage.RelPermalink .RelPermalink }} active{{ end }}">
+          {{- with .Params.chapter }}<span class="sidebar-chapter-num">{{ . }}</span>{{- end }}
+          {{ .Title }}
+        </a>
+      </li>
+      {{- end }}
+    </ul>
+  </div>
+  {{- end }}
+</div>
+{{- end }}
+
+<div class="sidebar-section">
+  <span class="sidebar-title">Reference</span>
+  <a href="{{ "/characters/" | relURL }}" class="sidebar-chapter-link{{ if hasPrefix $currentPage.RelPermalink "/characters" }} active{{ end }}">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Characters
+  </a>
+  <a href="{{ "/glossary/" | relURL }}" class="sidebar-chapter-link{{ if hasPrefix $currentPage.RelPermalink "/glossary" }} active{{ end }}">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    Glossary
+  </a>
+</div>

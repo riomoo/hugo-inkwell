@@ -1,0 +1,105 @@
+{{ define "main" }}
+<div class="character-page">
+
+  <!-- Profile sidebar -->
+  <aside>
+    <div class="character-profile-img">
+      {{- with .Params.image }}
+      {{- partial "image.html" (dict "src" . "alt" $.Title "class" "") }}
+      {{- else }}
+      <div style="width:100%;aspect-ratio:3/4;background:var(--ink-surface-3);display:flex;align-items:center;justify-content:center;font-size:5rem;color:var(--ink-text-faint);">
+        {{- with .Params.emoji }}{{ . }}{{- else }}👤{{- end }}
+      </div>
+      {{- end }}
+    </div>
+
+    {{- /* Extra reference images */ -}}
+    {{- with .Params.gallery }}
+    <div class="character-gallery" style="margin-top:0.75rem;">
+      {{- range . }}
+      <div class="character-gallery-item">
+        {{- partial "image.html" (dict "src" .src "alt" (.alt | default "") "class" "") }}
+      </div>
+      {{- end }}
+    </div>
+    {{- end }}
+
+    {{- /* Character attributes */ -}}
+    {{- with .Params.attributes }}
+    <div class="character-attributes" style="margin-top:1.25rem;">
+      {{- range . }}
+      <div class="character-attribute">
+        <span class="character-attribute-key">{{ .key }}</span>
+        <span class="character-attribute-value">{{ .value }}</span>
+      </div>
+      {{- end }}
+    </div>
+    {{- end }}
+
+    {{- /* Links */ -}}
+    {{- with .Params.links }}
+    <div style="margin-top:1rem;display:flex;flex-direction:column;gap:0.4rem;">
+      {{- range . }}
+      <a href="{{ .url }}" target="_blank" rel="noopener" class="btn btn-outline" style="font-size:0.78rem;padding:0.4rem 0.8rem;justify-content:center;">{{ .label }}</a>
+      {{- end }}
+    </div>
+    {{- end }}
+  </aside>
+
+  <!-- Main content -->
+  <div>
+    <div class="chapter-breadcrumb" style="margin-bottom:1.25rem;">
+      <a href="{{ "/characters/" | relURL }}">Characters</a>
+      <span class="chapter-breadcrumb-sep">›</span>
+      <span>{{ .Title }}</span>
+    </div>
+
+    {{- with .Params.role }}
+    <div class="chapter-volume-label" style="margin-bottom:0.5rem;">{{ . }}</div>
+    {{- end }}
+
+    <h1 class="chapter-title" style="margin-bottom:0.75rem;">{{ .Title }}</h1>
+
+    {{- with .Params.aliases }}
+    <p style="font-size:0.85rem;color:var(--ink-text-muted);font-style:italic;margin-bottom:1.5rem;">
+      Also known as: {{ delimit . ", " }}
+    </p>
+    {{- end }}
+
+    <div class="chapter-body">
+      {{ .Content }}
+    </div>
+
+    {{- /* Appearances: volumes this character appears in */ -}}
+    {{- with .Params.appearances }}
+    <section style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--ink-border-soft);">
+      <h2 style="font-family:var(--ink-heading-font);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-text-faint);margin-bottom:1rem;">Appears In</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+        {{- range . }}
+        {{- $volPage := $.Site.GetPage . }}
+        {{- if $volPage }}
+        <a href="{{ $volPage.RelPermalink }}" class="btn btn-outline" style="font-size:0.78rem;padding:0.35rem 0.75rem;">{{ $volPage.Title }}</a>
+        {{- else }}
+        <span style="font-size:0.82rem;padding:0.35rem 0.75rem;background:var(--ink-surface-3);border:1px solid var(--ink-border);border-radius:4px;color:var(--ink-text-muted);">{{ . }}</span>
+        {{- end }}
+        {{- end }}
+      </div>
+    </section>
+    {{- end }}
+
+    {{- /* Related characters */ -}}
+    {{- with .Params.related }}
+    <section style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--ink-border-soft);">
+      <h2 style="font-family:var(--ink-heading-font);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-text-faint);margin-bottom:1rem;">Related Characters</h2>
+      <div class="character-grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr));">
+        {{- range . }}
+        {{- $relChar := $.Site.GetPage (printf "/characters/%s" (urlize .)) }}
+        {{- if $relChar }}{{- partial "character-card.html" $relChar }}{{- end }}
+        {{- end }}
+      </div>
+    </section>
+    {{- end }}
+  </div>
+
+</div>
+{{ end }}

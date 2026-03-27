@@ -1,0 +1,9 @@
+{{- $src   := .Get "src" -}}
+{{- $alt   := .Get "alt"   | default "" -}}
+{{- $cap   := .Get "caption" | default "" -}}
+{{- $width := .Get "width"   | default "" -}}
+{{- $align := .Get "align"  | default "center" -}}
+<figure class="inkwell-figure" style="text-align:{{ $align }};">
+  {{- partial "image.html" (dict "src" $src "alt" $alt "class" "" "width" $width) }}
+  {{- with $cap }}<figcaption>{{ . | markdownify }}</figcaption>{{- end }}
+</figure>

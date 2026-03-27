@@ -1,0 +1,55 @@
+{{ define "main" }}
+<div class="home-hero">
+  {{- with .Site.Params.coverImage }}
+  <div class="home-hero-cover">
+    {{- partial "image.html" (dict "src" . "alt" ($.Site.Title) "class" "") }}
+  </div>
+  {{- end }}
+
+  {{- with .Site.Params.storyTagline }}
+  <p class="home-hero-tagline">{{ . }}</p>
+  {{- end }}
+
+  <h1 class="home-hero-title">{{ .Site.Params.storyTitle | default .Site.Title }}</h1>
+
+  {{- with .Content }}
+  <div class="home-hero-sub">{{ . }}</div>
+  {{- else }}
+  {{- with .Site.Params.description }}
+  <p class="home-hero-sub">{{ . }}</p>
+  {{- end }}
+  {{- end }}
+
+  <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+    {{- $volumeSection := .Site.GetPage "/volumes" }}
+    {{- if $volumeSection }}
+    {{- $firstVol := index ($volumeSection.Sections.ByWeight) 0 }}
+    {{- if $firstVol }}
+    {{- $chapters := $firstVol.Pages.ByWeight }}
+    {{- if not $chapters }}{{- $chapters = $firstVol.Pages.ByWeight }}{{- end }}
+    {{- $firstChapter := index $chapters 0 }}
+    {{- if $firstChapter }}
+    <a href="{{ $firstChapter.RelPermalink }}" class="btn btn-primary">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Start Reading
+    </a>
+    {{- end }}
+    {{- end }}
+    <a href="{{ "/volumes/" | relURL }}" class="btn btn-outline">All Volumes</a>
+    {{- end }}
+  </div>
+</div>
+
+{{- /* Latest volumes preview */ -}}
+{{- $volumeSection := .Site.GetPage "/volumes" }}
+{{- if $volumeSection }}
+<section>
+  <h2 style="font-family:var(--ink-heading-font);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-text-faint);margin-bottom:1.25rem;border-bottom:1px solid var(--ink-border-soft);padding-bottom:0.75rem;">Volumes</h2>
+  <div class="volume-grid">
+    {{- range $volumeSection.Sections.ByWeight }}
+    {{- partial "volume-card.html" . }}
+    {{- end }}
+  </div>
+</section>
+{{- end }}
+{{ end }}

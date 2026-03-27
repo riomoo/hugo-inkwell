@@ -1,0 +1,69 @@
+baseURL: "https://example.com/"
+languageCode: "en-us"
+title: "My Story"
+theme: "hugo-inkwell"
+
+# Inkwell Theme Configuration
+params:
+  # Story metadata
+  storyTitle: "My Story"
+  storyTagline: "A tale of wonder and shadow"
+  author: "Your Name"
+  authorBio: ""
+  authorAvatar: ""   # path to image
+
+  # UI Options
+  showReadingProgress: true
+  showWordCount: true
+  showReadingTime: true
+  showChapterNav: true       # prev/next chapter links at bottom
+  showVolumeNav: true        # volume TOC in sidebar
+  showTableOfContents: true  # in-chapter heading TOC
+  tocDepth: 3
+
+  # Cover image for homepage/social
+  coverImage: ""
+
+  # Footer
+  footerText: ""
+
+  # Features
+  enableGlossary: true
+  enableCharacters: true
+
+  # Date format for chapters
+  dateFormat: "January 2, 2006"
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true  # Allow raw HTML in markdown (needed for shortcodes)
+  highlight:
+    style: "dracula"
+    lineNos: false
+
+#taxonomies:
+#  volume: volumes
+#  tag: tags
+#  character: characters
+#
+# Recommended menu structure
+#menu:
+#  main:
+#    - name: "Start Reading"
+#      url: "/volumes/"
+#      weight: 1
+#    - name: "Characters"
+#      url: "/characters/"
+#      weight: 2
+#    - name: "Glossary"
+#      url: "/glossary/"
+#      weight: 3
+#
+#outputs:
+#  home:
+#    - HTML
+#    - RSS
+#  section:
+#    - HTML
+#    - RSS

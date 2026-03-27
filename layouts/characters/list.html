@@ -1,0 +1,39 @@
+{{ define "main" }}
+<div class="page-header">
+  <h1>{{ .Title | default "Characters" }}</h1>
+  {{- with .Description }}<p class="lead">{{ . }}</p>{{- end }}
+</div>
+
+{{- /* Group by volume/faction if param set */ -}}
+{{- $grouped := .Pages.GroupByParam "group" }}
+{{- $ungrouped := where .Pages "Params.group" nil }}
+
+{{- if gt (len $grouped) 0 }}
+  {{- range $grouped }}
+  <section style="margin-bottom:3rem;">
+    <h2 style="font-family:var(--ink-heading-font);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-text-faint);margin-bottom:1.25rem;border-bottom:1px solid var(--ink-border-soft);padding-bottom:0.5rem;">{{ .Key }}</h2>
+    <div class="character-grid">
+      {{- range .Pages.ByWeight }}
+      {{- partial "character-card.html" . }}
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+  {{- if $ungrouped }}
+  <section style="margin-bottom:3rem;">
+    <h2 style="font-family:var(--ink-heading-font);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-text-faint);margin-bottom:1.25rem;border-bottom:1px solid var(--ink-border-soft);padding-bottom:0.5rem;">Other</h2>
+    <div class="character-grid">
+      {{- range $ungrouped.ByWeight }}
+      {{- partial "character-card.html" . }}
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+{{- else }}
+<div class="character-grid">
+  {{- range .Pages.ByWeight }}
+  {{- partial "character-card.html" . }}
+  {{- end }}
+</div>
+{{- end }}
+{{ end }}

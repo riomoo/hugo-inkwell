@@ -1,0 +1,26 @@
+{{- /*
+  Partial: image.html
+  Usage: partial "image.html" (dict "src" "path/to/img.avif" "alt" "Description" "class" "my-class" "loading" "lazy")
+
+  Renders the image exactly as provided. No format conversion or sibling-file guessing.
+  Supported formats: anything the browser can display (AVIF, JXL, WebP, PNG, JPG, GIF, etc.)
+*/ -}}
+{{- $src := .src -}}
+{{- $alt := .alt | default "" -}}
+{{- $class := .class | default "" -}}
+{{- $loading := .loading | default "lazy" -}}
+{{- $width := .width | default "" -}}
+{{- $height := .height | default "" -}}
+{{- $style := .style | default "" -}}
+
+{{- if $src -}}
+<img
+  src="{{ $src | relURL }}"
+  alt="{{ $alt }}"
+  {{- with $class }} class="{{ . }}"{{ end -}}
+  {{- with $width }} width="{{ . }}"{{ end -}}
+  {{- with $height }} height="{{ . }}"{{ end -}}
+  {{- with $style }} style="{{ . }}"{{ end }}
+  loading="{{ $loading }}"
+  decoding="async">
+{{- end -}}

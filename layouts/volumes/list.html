@@ -1,0 +1,13 @@
+{{ define "main" }}
+<div class="page-header">
+  <h1>{{ .Title | default "Volumes" }}</h1>
+  {{- with .Description }}<p class="lead">{{ . }}</p>
+  {{- else }}<p class="lead">All volumes of {{ .Site.Title }}.</p>{{- end }}
+</div>
+{{ .Content }}
+<div class="volume-grid">
+  {{- range .Sections.ByWeight }}
+  {{- partial "volume-card.html" . }}
+  {{- end }}
+</div>
+{{ end }}

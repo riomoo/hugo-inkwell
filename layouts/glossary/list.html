@@ -1,0 +1,69 @@
+{{ define "main" }}
+{{- $allEntries := .Pages }}
+
+<div class="page-header">
+  <h1>{{ .Title | default "Glossary" }}</h1>
+  {{- with .Description }}<p class="lead">{{ . }}</p>
+  {{- else }}<p class="lead">Terms, places, and concepts across all volumes.</p>{{- end }}
+</div>
+
+{{- /* Collect all volumes that have glossary entries */ -}}
+{{- $volumes := slice "all" }}
+{{- range $allEntries }}
+  {{- with .Params.volume }}
+    {{- $volumes = $volumes | append . | uniq }}
+  {{- end }}
+{{- end }}
+
+{{- if gt (len $volumes) 2 }}
+<div class="glossary-filters">
+  {{- range $volumes }}
+  <button class="glossary-filter-btn{{ if eq . "all" }} active{{ end }}" data-filter="{{ . }}">
+    {{ if eq . "all" }}All Volumes{{ else }}{{ . }}{{ end }}
+  </button>
+  {{- end }}
+</div>
+{{- end }}
+
+{{- /* Sub-pages = per-volume glossaries */ -}}
+{{- if .Pages }}
+
+  {{- /* Group entries alphabetically */ -}}
+  {{- $alpha := dict }}
+  {{- range $allEntries }}
+    {{- $letter := upper (substr .Title 0 1) }}
+    {{- $existing := index $alpha $letter | default slice }}
+    {{- $alpha = merge $alpha (dict $letter ($existing | append .)) }}
+  {{- end }}
+
+  {{- $letters := slice "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z" }}
+  {{- range $letter := $letters }}
+  {{- $entries := index $alpha $letter }}
+  {{- if $entries }}
+  <div class="glossary-alpha-group">
+    <div class="glossary-alpha-letter">{{ $letter }}</div>
+    {{- range $entries }}
+    <div class="glossary-entry"
+         data-volume="{{ .Params.volume | default "" }}"
+         data-tags="{{ delimit (.Params.tags | default slice) "," }}">
+      <div class="glossary-term">
+        {{ .Title }}
+        {{- with .Params.tags }}
+          {{- range . }}<span class="glossary-tag">{{ . }}</span>{{- end }}
+        {{- end }}
+      </div>
+      <div class="glossary-def">
+        {{- .Description }}
+        <a href="{{ .RelPermalink }}" style="font-size:0.78rem;color:var(--ink-accent);margin-left:0.4rem;">more →</a>
+      </div>
+    </div>
+    {{- end }}
+  </div>
+  {{- end }}
+  {{- end }}
+
+{{- else }}
+<p style="color:var(--ink-text-muted);font-style:italic;">No glossary entries yet. Create pages in <code>content/glossary/</code>.</p>
+{{- end }}
+
+{{ end }}

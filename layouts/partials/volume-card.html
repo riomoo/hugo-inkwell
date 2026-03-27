@@ -1,0 +1,45 @@
+{{- $vol := . }}
+{{- $chapters := $vol.Pages.ByWeight }}
+{{- if not $chapters }}{{- $chapters = $vol.Pages.ByWeight }}{{- end }}
+<article class="volume-card">
+  <a href="{{ $vol.RelPermalink }}" style="text-decoration:none;color:inherit;">
+    <div class="volume-card-header">
+      {{- with $vol.Params.cover }}
+      <div class="volume-card-cover">
+        {{- partial "image.html" (dict "src" . "alt" $vol.Title "class" "") }}
+      </div>
+      {{- else }}
+      <div class="volume-card-cover-placeholder">{{ $vol.Params.volumeNumber | default "I" }}</div>
+      {{- end }}
+
+      <div class="volume-card-meta">
+        <span class="volume-card-label">Volume {{ $vol.Params.volumeNumber | default (add $vol.Weight 0) }}</span>
+        <div class="volume-card-title">{{ $vol.Title }}</div>
+        {{- with $vol.Description }}
+        <p class="volume-card-desc">{{ . }}</p>
+        {{- end }}
+        <div class="volume-card-stats">
+          <span>{{ len $chapters }} chapter{{ if ne (len $chapters) 1 }}s{{ end }}</span>
+          {{- with $vol.Params.status }}<span>{{ . }}</span>{{- end }}
+        </div>
+      </div>
+    </div>
+  </a>
+
+  {{- if $chapters }}
+  <div class="volume-chapter-list">
+    {{- range first 5 $chapters }}
+    <a href="{{ .RelPermalink }}" class="volume-chapter-item">
+      <span class="volume-chapter-item-num">{{ .Params.chapter | default "·" }}</span>
+      <span class="volume-chapter-item-title">{{ .Title }}</span>
+      {{- if .Date }}<span class="volume-chapter-item-date">{{ .Date.Format "Jan 2" }}</span>{{- end }}
+    </a>
+    {{- end }}
+    {{- if gt (len $chapters) 5 }}
+    <a href="{{ $vol.RelPermalink }}" class="volume-chapter-item" style="color:var(--ink-accent);font-size:0.8rem;justify-content:center;padding:0.5rem;">
+      +{{ sub (len $chapters) 5 }} more chapters →
+    </a>
+    {{- end }}
+  </div>
+  {{- end }}
+</article>

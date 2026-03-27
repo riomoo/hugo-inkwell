@@ -1,0 +1,17 @@
+{{ define "main" }}
+<div class="page-header">
+  <h1>{{ .Title }}</h1>
+  {{- with .Description }}<p class="lead">{{ . }}</p>{{- end }}
+</div>
+{{ .Content }}
+<div class="volume-grid">
+  {{- range .Pages.ByWeight }}
+  <article style="background:var(--ink-surface);border:1px solid var(--ink-border);border-radius:8px;padding:1.25rem;transition:border-color var(--ink-transition);">
+    <a href="{{ .RelPermalink }}" style="text-decoration:none;color:inherit;">
+      <h2 style="font-size:1rem;margin-bottom:0.4rem;color:var(--ink-text-heading);">{{ .Title }}</h2>
+      {{- with .Description }}<p style="font-size:0.88rem;color:var(--ink-text-muted);margin:0;">{{ . }}</p>{{- end }}
+    </a>
+  </article>
+  {{- end }}
+</div>
+{{ end }}

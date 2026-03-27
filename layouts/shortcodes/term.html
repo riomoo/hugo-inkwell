@@ -1,0 +1,8 @@
+{{- $term := .Get "term" -}}
+{{- $slug := .Get "slug" | default (urlize $term) -}}
+{{- $termPage := .Site.GetPage (printf "/glossary/%s" $slug) -}}
+{{- $def := .Get "def" | default "" -}}
+{{- if not $def }}{{- with $termPage }}{{- $def = .Description }}{{- end }}{{- end -}}
+<abbr title="{{ $def }}"
+      style="text-decoration:underline dotted;text-underline-offset:3px;cursor:help;color:inherit;"
+>{{- if $termPage -}}<a href="{{ $termPage.RelPermalink }}" style="color:inherit;">{{ $term }}</a>{{- else -}}{{ $term }}{{- end -}}</abbr>
