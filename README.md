@@ -2,6 +2,8 @@
 
 A dark-mode, book-reader-first Hugo theme built for writing long-form serial fiction with Volumes, Chapters, Characters, and Glossaries. Comfy to read, easy on the eyes, and fully mobile-friendly.
 
+---
+
 ## License
 
 [![Custom badge](https://git.jester-designs.com/riomoo/hugo-inkwell/media/branch/main/docs/images/svgs/PIL.svg)](LICENSE)
@@ -15,6 +17,7 @@ A dark-mode, book-reader-first Hugo theme built for writing long-form serial fic
 - Per-volume glossaries: filter entries by volume, tag, or browse alphabetically
 - Character pages: profile images, attribute tables, reference galleries, related characters
 - Image format agnostic: place any browser-supported format (AVIF, JXL, WebP, PNG, JPG, GIF, etc.) in your static directory and it renders as-is
+- Open Graph & Twitter/X cards: per-page type-aware metadata with separate OG image support for Discord compatibility
 - Reading progress bar: thin amber bar at the very top of the viewport
 - Word count & reading time: per-chapter metadata
 - Drop cap: automatic on first paragraph of every chapter
@@ -22,6 +25,8 @@ A dark-mode, book-reader-first Hugo theme built for writing long-form serial fic
 - Shortcodes: `callout`, `spoiler`, `figure`, `scene-break`, `char`, `term`, `volume-glossary`
 - Mobile-first: responsive layout with slide-in sidebar drawer on small screens
 - Lora + Cinzel: serif body font paired with a classical display font for headings
+- Donate button: optional PayPal link in the topbar, configured via `config.yaml`
+- Story license notice: configurable footer text supports Markdown for licensing links
 
 ---
 
@@ -100,7 +105,7 @@ params:
   storyTitle: "My Story"
   storyTagline: "A tagline for the header"
   author: "Author Name"
-  coverImage: "images/cover.avif"   # homepage hero cover
+  coverImage: "images/cover.png"    # fallback OG image for pages without their own
 
   showReadingProgress: true   # amber progress bar at top
   showWordCount: true
@@ -110,7 +115,9 @@ params:
   tocDepth: 3
 
   dateFormat: "January 2, 2006"
-  footerText: "Custom footer text (markdown ok)"
+  footerText: "Story content © 2024 Your Name. Licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)."
+
+  paypalURL: "https://paypal.me/yourname"   # adds a Donate link to the topbar; omit to hide
 ```
 
 ---
@@ -123,13 +130,16 @@ params:
 ---
 title: "Volume Title"
 description: "Short description shown on the volumes page."
-volumeNumber: "I"          # Roman numeral displayed as label
-weight: 1                  # Sort order
-status: "Complete"         # Optional badge: Complete, Ongoing, Hiatus
-cover: "images/vol1.avif"  # Cover image
+volumeNumber: "I"              # Roman numeral displayed as label
+weight: 1                      # Sort order
+status: "Complete"             # Optional badge: Complete, Ongoing, Hiatus
+cover: "images/volumes/vol1.avif"   # Cover image displayed on the page
+ogImage: "images/volumes/vol1.png"  # Separate PNG for Discord/OG embeds (optional)
 ---
 Optional prose shown above the chapter list.
 ```
+
+Recommended cover size: 400 × 600px (2:3 ratio). The cover is displayed at 120px wide on the volume detail page and 70px wide on the volumes list.
 
 ### Chapter
 
@@ -141,9 +151,12 @@ chapter: 1               # Number shown in metadata and sidebar
 weight: 1                # Sort order within the volume
 date: 2024-01-01
 tags: ["tag1", "tag2"]
+ogImage: "images/volumes/vol1.png"  # Override OG image (optional; inherits from volume by default)
 ---
 Chapter prose here.
 ```
+
+Chapters inherit their OG image from the parent volume automatically. Only set `ogImage` on a chapter if you want to override it.
 
 ### Character
 
@@ -152,9 +165,10 @@ Chapter prose here.
 title: "Character Name"
 description: "One-line description for the character grid."
 role: "Protagonist"
-group: "Faction Name"     # Groups characters on the list page
-emoji: "🧭"               # Fallback if no image
-image: "images/characters/name.avif"
+group: "Faction Name"          # Groups characters on the list page
+emoji: "🧭"                    # Fallback if no image
+image: "images/characters/name.avif"    # Displayed on the page
+ogImage: "images/characters/name.png"   # PNG for Discord/OG embeds (optional)
 
 aliases: ["Nickname", "Other Name"]
 
@@ -181,6 +195,10 @@ links:
 Full biography in Markdown.
 ```
 
+Recommended image size: 480 × 640px (3:4 ratio) for the main profile image. Gallery images can be any aspect ratio at around 400px wide.
+
+The `related` field takes a list of character slugs and renders them as character cards at the bottom of the profile. It carries no semantic meaning — use it for whatever relationship is relevant (family, rivals, allies, etc.).
+
 ### Glossary Entry
 
 ```yaml
@@ -193,7 +211,7 @@ tags: ["place", "magic"]
 Full expanded definition in Markdown.
 ```
 
-> **Note:** The `description` field is the only source used for glossary tooltips and list previews. It is read directly from front matter and is never derived from page content. Always fill it in.
+> Important: The `description` field is the only source used for glossary tooltips and list previews. It is read directly from front matter and is never derived from page content. Always fill it in.
 
 ---
 
@@ -254,9 +272,10 @@ Renders an inline character link to `/characters/veth`. If no character page exi
 
 ```
 {{< term term="Meridian" >}}
+{{< term term="Meridian" def="A custom tooltip override." >}}
 ```
 
-Renders an `<abbr>` with the term's front matter `description` as the tooltip. Links to `/glossary/meridian` if the page exists. You can override the tooltip text inline with `def="…"`.
+Renders an `<abbr>` with the term's front matter `description` as the tooltip, linking to `/glossary/meridian` if the page exists. Use `def` to override the tooltip text inline without editing the glossary entry.
 
 ---
 
@@ -282,7 +301,69 @@ image: "images/characters/sael.avif"
 {{< figure src="images/map.png" alt="A map" >}}
 ```
 
-The theme renders images exactly as provided; it does not attempt to guess or generate alternate format variants. Use whichever format you prefer; all formats supported by modern browsers (AVIF, JXL, WebP, PNG, JPG, GIF, etc.) work without any extra configuration.
+The theme renders images exactly as provided — no format conversion or alternate-file guessing. Use whichever format you prefer for display. See the Open Graph section below for OG-specific image guidance.
+
+---
+
+## Open Graph & Social Metadata
+
+The theme generates full Open Graph, Twitter/X card, and JSON-LD metadata for every page. The OG image is resolved per page type:
+
+| Page | OG image source |
+|------|----------------|
+| Character | `ogImage`, falls back to `image` |
+| Volume | `ogImage`, falls back to `cover` |
+| Chapter | `ogImage`, falls back to parent volume's `ogImage`, then `cover` |
+| Everything else | site `params.coverImage` |
+
+Discord and many other platforms do not support AVIF for OG images. Use PNG or JPG for your `ogImage` values. A common workflow is to keep a high-quality AVIF for page display and a smaller optimized PNG for OG:
+
+```yaml
+cover: "images/volumes/vol1.avif"      # shown on the page
+ogImage: "images/volumes/vol1.png"     # used for Discord, Twitter, etc.
+```
+
+If `ogImage` is not set, the theme falls back to the display image (`cover` or `image`), which may not render on all platforms.
+
+JSON-LD type per page: `WebSite` (home), `Book` (volume), `Article` (chapter), `Person` (character), `DefinedTerm` (glossary entry).
+
+---
+
+## Favicon
+
+Place a `favicon.ico` file in your site's `static/` directory. For better high-DPI support, override `layouts/partials/head.html` in your site and add additional formats:
+
+```html
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+```
+
+An SVG favicon is the most future-proof single option if you only want one file.
+
+---
+
+## Donate Button
+
+Set `paypalURL` in your `config.yaml` to add a Donate link to the topbar:
+
+```yaml
+params:
+  paypalURL: "https://paypal.me/yourname"
+```
+
+The link appears as a standard nav item in the topbar. Remove or leave unset to hide it entirely.
+
+---
+
+## Story License
+
+Use `footerText` in your `config.yaml` to display a license notice in the footer. It supports Markdown:
+
+```yaml
+params:
+  footerText: "Story content © 2024 Your Name. Licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)."
+```
 
 ---
 
@@ -339,8 +420,7 @@ hugo-inkwell/
 │   │   ├── list.html
 │   │   └── single.html
 │   ├── volumes/
-│   │   ├── list.html
-│   │   ├── single.html        ← volume index page
+│   │   ├── list.html          ← volumes index + individual volume pages
 │   │   └── chapter.html       ← chapter reading view
 │   ├── partials/
 │   │   ├── head.html
@@ -377,70 +457,75 @@ hugo-inkwell/
 
 ---
 
-## Volume image size
-
-Volume covers should be 400x600px (2:3 portrait ratio)
-
 ## Hosting with Nginx
- 
-Hugo builds a static site into the `public/` directory. Nginx just serves the files directly.
- 
+
+Hugo builds a static site into the `public/` directory. There is no backend — Nginx just serves the files directly.
+
 ### 1. Build your site
- 
+
 ```bash
 hugo --minify
 ```
- 
+
 This outputs everything to `public/`. Copy or sync that directory to your server, e.g.:
- 
+
 ```bash
 rsync -avz --delete public/ user@yourserver:/var/www/yoursite/
 ```
- 
+
 ### 2. Nginx configuration
- 
+
 ```nginx
 server {
-    listen 8080;
-    listen [::]:8080;
+    listen 80;
+    listen [::]:80;
     server_name yoursite.com www.yoursite.com;
- 
+
+    # Redirect HTTP to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name yoursite.com www.yoursite.com;
+
     root /var/www/yoursite;
     index index.html;
- 
+
     # Clean URLs — Hugo generates index.html files in subdirectories,
     # so /volumes/volume-one/ resolves to /volumes/volume-one/index.html
     location / {
         try_files $uri $uri/ $uri.html =404;
     }
- 
+
     # Custom 404 page (Hugo generates this if you have a layouts/404.html)
     error_page 404 /404.html;
     location = /404.html {
         internal;
     }
- 
+
     # Cache static assets
     location ~* \.(css|js|woff2|woff|ttf)$ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
- 
+
     # Cache images — adjust max-age to taste
     location ~* \.(avif|jxl|webp|png|jpg|jpeg|gif|ico|svg)$ {
         expires 6M;
         add_header Cache-Control "public";
     }
- 
+
     # Gzip
     gzip on;
     gzip_types text/plain text/css application/javascript application/json image/svg+xml;
     gzip_min_length 1024;
 }
 ```
- 
+
 ### 3. Enable and reload
- 
+
 ```bash
 sudo ln -s /etc/nginx/sites-available/yoursite /etc/nginx/sites-enabled/
 sudo nginx -t
