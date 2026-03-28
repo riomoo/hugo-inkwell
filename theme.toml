@@ -1,13 +1,13 @@
 name = "Inkwell"
-license = "MIT"
-licenselink = "https://github.com/yourusername/hugo-inkwell/blob/main/LICENSE"
+license = "PIL"
+licenselink = "https://github.com/riomoo/hugo-inkwell/blob/main/LICENSE"
 description = "A dark-mode, book-reader-focused Hugo theme for serial fiction — Volumes, Chapters, Characters, and Glossaries."
-homepage = "https://github.com/yourusername/hugo-inkwell"
+homepage = "https://github.com/riomoo/hugo-inkwell"
 demosite = ""
 tags = ["dark", "book", "fiction", "story", "reading", "chapters", "glossary"]
 features = ["dark mode", "avif/jxl/apng support", "glossary", "character pages", "volumes", "mobile-first", "reading progress"]
-min_version = "0.100.0"
+min_version = "0.157.0"
 
 [author]
-  name = ""
-  homepage = ""
+  name = "riomoo/alister"
+  homepage = "https://github.com/riomoo"
