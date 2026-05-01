@@ -820,7 +820,7 @@ tr:hover td { background: var(--ink-surface-2); }
 
 .character-card-img {
   width: 100%;
-  aspect-ratio: 3/4;
+  aspect-ratio: auto;
   object-fit: cover;
   display: block;
   background: var(--ink-surface-3);
