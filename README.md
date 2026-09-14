@@ -105,7 +105,17 @@ params:
   storyTitle: "My Story"
   storyTagline: "A tagline for the header"
   author: "Author Name"
+  authorBio: "A short bio shown under your name in the sidebar."
+  authorAvatar: "images/avatar.jpg"   # shown as a circular profile picture in the sidebar
   coverImage: "images/cover.png"    # fallback OG image for pages without their own
+
+  socialLinks:                     # icons shown under the author card in the sidebar
+    - name: "Twitter"
+      url: "https://twitter.com/yourhandle"
+    - name: "Instagram"
+      url: "https://instagram.com/yourhandle"
+    - name: "Patreon"
+      url: "https://patreon.com/yourname"
 
   showReadingProgress: true   # amber progress bar at top
   showWordCount: true
@@ -197,14 +207,14 @@ Full biography in Markdown.
 
 Recommended image size: 480 × 640px (3:4 ratio) for the main profile image. Gallery images can be any aspect ratio at around 400px wide.
 
-The `related` field takes a list of character slugs and renders them as character cards at the bottom of the profile. It carries no semantic meaning — use it for whatever relationship is relevant (family, rivals, allies, etc.).
+The `related` field takes a list of character slugs and renders them as character cards at the bottom of the profile. It carries no semantic meaning; use it for whatever relationship is relevant (family, rivals, allies, etc.).
 
 ### Glossary Entry
 
 ```yaml
 ---
 title: "Term Name"
-description: "Short definition — shown in tooltips and the glossary list."
+description: "Short definition, shown in tooltips and the glossary list."
 volume: "Volume One"      # For filtering on the glossary page
 tags: ["place", "magic"]
 ---
@@ -301,7 +311,20 @@ image: "images/characters/sael.avif"
 {{< figure src="images/map.png" alt="A map" >}}
 ```
 
-The theme renders images exactly as provided — no format conversion or alternate-file guessing. Use whichever format you prefer for display. See the Open Graph section below for OG-specific image guidance.
+The theme renders images exactly as provided, no format conversion or alternate-file guessing. Use whichever format you prefer for display. See the Open Graph section below for OG-specific image guidance.
+
+---
+
+## Author Card
+
+The sidebar shows an author card above the navigation, built entirely from site params, nothing to enable, it just renders whatever you set:
+
+- `author` - your name
+- `authorAvatar` - path to a profile picture, rendered as a circle. If omitted, the theme shows a placeholder with your name's first letter.
+- `authorBio` - a short bio or tagline shown under your name (supports Markdown links).
+- `socialLinks` - a list of `{ name, url }` pairs rendered as icons. Known platforms (Twitter/X, Instagram, YouTube, Mastodon/fediverse/ActivityPub, Bluesky, Discord, GitHub, Tumblr, Patreon/Ko-fi, email, RSS) get a matching icon automatically; anything else falls back to a generic link icon. Add an explicit `icon:` key to force a specific icon regardless of `name`. Each link also gets `rel="me"`, so a Mastodon/ActivityPub link here works for that platform's profile verification.
+
+If none of `author`, `authorAvatar`, `authorBio`, or `socialLinks` are set, the card doesn't render at all.
 
 ---
 
@@ -459,7 +482,7 @@ hugo-inkwell/
 
 ## Hosting with Nginx
 
-Hugo builds a static site into the `public/` directory. There is no backend — Nginx just serves the files directly.
+Hugo builds a static site into the `public/` directory. There is no backend, Nginx just serves the files directly.
 
 ### 1. Build your site
 
@@ -493,7 +516,7 @@ server {
     root /var/www/yoursite;
     index index.html;
 
-    # Clean URLs — Hugo generates index.html files in subdirectories,
+    # Clean URLs - Hugo generates index.html files in subdirectories,
     # so /volumes/volume-one/ resolves to /volumes/volume-one/index.html
     location / {
         try_files $uri $uri/ $uri.html =404;
@@ -511,7 +534,7 @@ server {
         add_header Cache-Control "public, immutable";
     }
 
-    # Cache images — adjust max-age to taste
+    # Cache images - adjust max-age to taste
     location ~* \.(avif|jxl|webp|png|jpg|jpeg|gif|ico|svg)$ {
         expires 6M;
         add_header Cache-Control "public";

@@ -332,6 +332,80 @@ tr:hover td { background: var(--ink-surface-2); }
   display: block;
 }
 
+/* ── Author Card ──────────────────────────────────────────── */
+.sidebar-author {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--ink-border-soft);
+}
+
+.author-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--ink-border);
+  margin-bottom: 0.65rem;
+}
+
+.author-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink-accent-dim);
+  color: var(--ink-accent);
+  font-family: var(--ink-heading-font);
+  font-size: 1.4rem;
+  letter-spacing: 0.02em;
+}
+
+.author-name {
+  font-family: var(--ink-heading-font);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-text-heading);
+}
+
+.author-bio {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--ink-text-muted);
+  margin: 0.4rem 0 0;
+  padding: 0 0.5rem;
+}
+.author-bio p { margin: 0; }
+.author-bio a { color: var(--ink-accent); }
+
+.author-socials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.author-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--ink-text-muted);
+  background: var(--ink-surface-2);
+  transition: color var(--ink-transition), background var(--ink-transition);
+}
+.author-social-link:hover {
+  color: var(--ink-accent);
+  background: var(--ink-accent-dim);
+}
+.author-social-link svg { display: block; }
+
 .sidebar-volume {
   margin-bottom: 1rem;
 }

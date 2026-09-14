@@ -1,0 +1,73 @@
+{{- /*
+  Partial: author-card.html
+  Displays the author's avatar, name, bio, and social links in the sidebar.
+  Controlled entirely by site params — renders nothing if no author info is set.
+
+  params:
+    author        string  - display name
+    authorBio     string  - short bio / tagline
+    authorAvatar  string  - path to avatar image
+    socialLinks   list    - [{ name: "Twitter", url: "https://...", icon: "twitter" }, ...]
+                            `icon` is optional; falls back to matching on `name`,
+                            then to a generic link glyph.
+                            Recognized keywords: twitter/x, instagram, mastodon/
+                            fediverse/activitypub, youtube, bluesky, patreon/kofi/
+                            donate, discord, tumblr, github, email/mail, rss/feed.
+*/ -}}
+{{- $author := .Site.Params.author -}}
+{{- $bio := .Site.Params.authorBio -}}
+{{- $avatar := .Site.Params.authorAvatar -}}
+{{- $socials := .Site.Params.socialLinks -}}
+
+{{- if or $author $avatar $bio $socials }}
+<div class="sidebar-section sidebar-author">
+
+  {{- if $avatar }}
+  {{- partial "image.html" (dict "src" $avatar "alt" $author "class" "author-avatar") }}
+  {{- else if $author }}
+  <div class="author-avatar author-avatar-placeholder" aria-hidden="true">
+    {{- slicestr (upper $author) 0 1 }}
+  </div>
+  {{- end }}
+
+  {{- with $author }}<div class="author-name">{{ . }}</div>{{- end }}
+  {{- with $bio }}<p class="author-bio">{{ . | markdownify }}</p>{{- end }}
+
+  {{- with $socials }}
+  <div class="author-socials">
+    {{- range . }}
+    {{- $name := .name | default "" }}
+    {{- $key := lower (.icon | default $name) }}
+    <a href="{{ .url }}" class="author-social-link" target="_blank" rel="noopener me" aria-label="{{ $name }}" title="{{ $name }}">
+      {{- if in $key "twitter" }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-6.9l-5.4-7-6.2 7H1.7l8.1-9.3L1 2h7l4.9 6.4L18.9 2Zm-1.2 18h1.9L7.4 4H5.3l12.4 16Z"/></svg>
+      {{- else if in $key "instagram" }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1"/></svg>
+      {{- else if or (in $key "mastodon") (in $key "fediverse") (in $key "activitypub") }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21.3 6.6c-.3-2.3-2.3-4.1-4.6-4.4-3.1-.4-6.3-.4-9.4 0-2.3.3-4.3 2.1-4.6 4.4-.4 2.9-.4 5.9 0 8.8.3 2.1 2 3.8 4.1 4.2 1.7.4 3.5.6 5.2.6.4 0 .8-.2 1-.5l.7-1.1c-2.2 0-4.4-.2-5.5-.7-.1 0-.1-.2 0-.2 0 0 .1-.1.2 0 3.1.7 6.5.7 9.6 0 .1 0 .2 0 .2.1 0 0 0 .1-.1.2-.6.3-1.5.5-2.4.6l.7 1.1c.2.3.6.5 1 .5 1.7 0 3.5-.2 5.2-.6 2.1-.4 3.8-2.1 4.1-4.2.4-2.9.4-5.9 0-8.8ZM16 13.3h-2V8.5c0-1-.4-1.5-1.3-1.5-.9 0-1.4.6-1.4 1.7v2.5H9.3V8.7c0-1.1-.5-1.7-1.4-1.7-.9 0-1.3.5-1.3 1.5v4.8h-2v-5c0-1 .3-1.8.8-2.4.6-.6 1.3-.9 2.2-.9 1.1 0 1.9.4 2.4 1.3l.5 .9.5-.9c.5-.9 1.3-1.3 2.4-1.3.9 0 1.7.3 2.2.9.6.6.8 1.4.8 2.4v5Z"/></svg>
+      {{- else if in $key "youtube" }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.5 7.2a2.9 2.9 0 0 0-2-2C18.7 4.7 12 4.7 12 4.7s-6.7 0-8.5.5a2.9 2.9 0 0 0-2 2A30 30 0 0 0 1 12a30 30 0 0 0 .5 4.8 2.9 2.9 0 0 0 2 2c1.8.5 8.5.5 8.5.5s6.7 0 8.5-.5a2.9 2.9 0 0 0 2-2A30 30 0 0 0 23 12a30 30 0 0 0-.5-4.8ZM9.8 15.3V8.7l5.8 3.3-5.8 3.3Z"/></svg>
+      {{- else if in $key "bluesky" }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8.6C10.6 6 6.7 3.2 4 2.3 2.3 1.7 1.6 2.5 2 3.9c.3 1.1 1 5.4 1.5 6.7.6 1.6 2.4 2.1 4 1.9-2.3.3-4.4 1.2-1.7 4.2 3 3.2 4.1-.7 4.7-2.7.1-.4.1-.4.2 0 .6 2 1.7 5.9 4.7 2.7 2.7-3 .6-3.9-1.7-4.2 1.6.2 3.4-.3 4-1.9.5-1.3 1.2-5.6 1.5-6.7.4-1.4-.3-2.2-2-1.6-2.7.9-6.6 3.7-8 6.3Z"/></svg>
+      {{- else if or (in $key "patreon") (in $key "kofi") (in $key "ko-fi") (in $key "donate") }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14.8 2.4a7 7 0 1 1 0 14 7 7 0 0 1 0-14ZM2 2.6h3.4V21H2V2.6Z"/></svg>
+      {{- else if or (in $key "discord") }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 5.4A18 18 0 0 0 15.8 4l-.3.6a13 13 0 0 1 3.9 1.6c-1.7-.9-3.4-1.5-5.4-1.7a12 12 0 0 0-4 0c-2 .2-3.7.8-5.4 1.7A13 13 0 0 1 8.5 4.6L8.2 4a18 18 0 0 0-4.5 1.4C1.4 9 .8 12.5 1 16a18 18 0 0 0 5.5 2.8l.9-1.4a11 11 0 0 1-1.8-.9l.4-.3a13 13 0 0 0 11 0l.4.3c-.6.3-1.2.6-1.8.9l.9 1.4A18 18 0 0 0 21 16c.4-4-.6-7.4-2.7-10.6ZM8.7 14.1c-.8 0-1.5-.8-1.5-1.7 0-.9.7-1.7 1.5-1.7.9 0 1.6.8 1.5 1.7 0 .9-.6 1.7-1.5 1.7Zm6.6 0c-.8 0-1.5-.8-1.5-1.7 0-.9.7-1.7 1.5-1.7.9 0 1.6.8 1.5 1.7 0 .9-.6 1.7-1.5 1.7Z"/></svg>
+      {{- else if or (in $key "tumblr") }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14.6 21c-3 0-4.9-1.7-4.9-4.9V10.6H7.5V7.9c2.3-.6 3.3-2.6 3.4-4.6h2.6v4.3h3.4v3H13.5v5c0 1.2.6 1.8 1.7 1.8.6 0 1.3-.2 1.7-.5l.8 2.8c-.7.6-2 1.3-3.1 1.3Z"/></svg>
+      {{- else if or (in $key "github") }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.3-3.4-1.3-.5-1.1-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.6-1.4-2.2-.2-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.5-1.3.1-2.7 0 0 .8-.3 2.7 1a9.3 9.3 0 0 1 4.9 0c1.9-1.3 2.7-1 2.7-1 .6 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7 1 .7 2v2.9c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg>
+      {{- else if or (in $key "email") (in $key "mail") }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6.5 9 6 9-6"/></svg>
+      {{- else if or (in $key "rss") (in $key "feed") }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.5" fill="currentColor" stroke="none"/></svg>
+      {{- else }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5"/></svg>
+      {{- end }}
+    </a>
+    {{- end }}
+  </div>
+  {{- end }}
+
+</div>
+{{- end }}

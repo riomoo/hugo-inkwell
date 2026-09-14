@@ -1,6 +1,8 @@
 {{- $currentPage := . }}
 {{- $volumeSection := .Site.GetPage "/volumes" }}
 
+{{- partial "author-card.html" . }}
+
 {{- if $volumeSection }}
 <div class="sidebar-section">
   <span class="sidebar-title">Story</span>

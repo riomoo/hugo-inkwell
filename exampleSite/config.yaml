@@ -12,6 +12,21 @@ params:
   authorBio: ""
   authorAvatar: ""   # path to image
 
+  # Author social links, shown as icons in the sidebar under the author card.
+  # `icon` is optional — omit it and the theme will match a known icon by `name`
+  # (twitter/x, instagram, youtube, mastodon/fediverse/activitypub, bluesky, discord,
+  # github, tumblr, patreon/ko-fi, email, rss). Anything else falls back to a
+  # generic link icon. Each link gets rel="me", so a Mastodon/ActivityPub profile
+  # link here also serves as that platform's verification link.
+  socialLinks: []
+  # socialLinks:
+  #   - name: "Twitter"
+  #     url: "https://twitter.com/yourhandle"
+  #   - name: "Instagram"
+  #     url: "https://instagram.com/yourhandle"
+  #   - name: "Patreon"
+  #     url: "https://patreon.com/yourname"
+
   # UI Options
   showReadingProgress: true
   showWordCount: true
