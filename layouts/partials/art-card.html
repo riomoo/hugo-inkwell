@@ -1,0 +1,60 @@
+{{- /*
+  Partial: art-card.html
+  Renders one tile in the Art grid.
+
+  Thumbnail resolution order:
+    1. params.thumbnail   (explicit override — always wins)
+    2. params.image       (local image file)
+    3. params.video       (local video — shown as a play placeholder)
+    4. params.externalURL (if it points straight at an image/video file, embed
+                            it; otherwise it's a link-out and gets a placeholder)
+*/ -}}
+{{- $p := . -}}
+{{- $videoExts := slice ".mp4" ".mov" ".webm" ".mkv" ".m4v" -}}
+{{- $imageExts := slice ".jpg" ".jpeg" ".png" ".gif" ".webp" ".avif" ".jxl" -}}
+
+{{- $thumb := $p.Params.thumbnail -}}
+{{- $isVideo := false -}}
+{{- $isExternalLink := false -}}
+
+{{- if not $thumb -}}
+  {{- if $p.Params.image -}}
+    {{- $thumb = $p.Params.image -}}
+  {{- else if $p.Params.video -}}
+    {{- $isVideo = true -}}
+  {{- else if $p.Params.externalURL -}}
+    {{- $ext := path.Ext (lower $p.Params.externalURL) -}}
+    {{- if in $imageExts $ext -}}
+      {{- $thumb = $p.Params.externalURL -}}
+    {{- else if in $videoExts $ext -}}
+      {{- $isVideo = true -}}
+    {{- else -}}
+      {{- $isExternalLink = true -}}
+    {{- end -}}
+  {{- end -}}
+{{- else if and $p.Params.externalURL (not $p.Params.image) (not $p.Params.video) -}}
+  {{- $ext := path.Ext (lower $p.Params.externalURL) -}}
+  {{- if not (or (in $imageExts $ext) (in $videoExts $ext)) -}}
+    {{- $isExternalLink = true -}}
+  {{- end -}}
+{{- end -}}
+
+<a href="{{ $p.RelPermalink }}" class="art-card">
+  <div class="art-card-media">
+    {{- if $thumb }}
+    {{- partial "image.html" (dict "src" $thumb "alt" $p.Title "class" "art-card-img") }}
+    {{- else if $isVideo }}
+    <div class="art-card-placeholder"><span>▶</span></div>
+    {{- else if $isExternalLink }}
+    <div class="art-card-placeholder"><span>🔗</span></div>
+    {{- else }}
+    <div class="art-card-placeholder"><span>🎨</span></div>
+    {{- end }}
+    {{- if $isVideo }}<span class="art-card-badge" aria-hidden="true">▶</span>{{- end }}
+    {{- if $isExternalLink }}<span class="art-card-badge" aria-hidden="true">↗</span>{{- end }}
+  </div>
+  <div class="art-card-body">
+    <div class="art-card-title">{{ $p.Title }}</div>
+    {{- with $p.Params.artist }}<div class="art-card-artist">{{ . }}</div>{{- end }}
+  </div>
+</a>

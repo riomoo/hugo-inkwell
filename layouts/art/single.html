@@ -1,0 +1,45 @@
+{{ define "main" }}
+<div class="chapter-breadcrumb" style="margin-bottom:1.25rem;">
+  <a href="{{ "/art/" | relURL }}">Art</a>
+  <span class="chapter-breadcrumb-sep">›</span>
+  <span>{{ .Title }}</span>
+</div>
+
+<h1 class="chapter-title" style="margin-bottom:0.5rem;">{{ .Title }}</h1>
+
+{{- if or .Params.artist (not .Date.IsZero) }}
+<div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin-bottom:1.5rem;color:var(--ink-text-muted);font-size:0.85rem;">
+  {{- with .Params.artist }}<span>by {{ . }}</span>{{- end }}
+  {{- if and .Params.artist (not .Date.IsZero) }}<span>·</span>{{- end }}
+  {{- if not .Date.IsZero }}<span>{{ .Date.Format (.Site.Params.dateFormat | default "January 2, 2006") }}</span>{{- end }}
+</div>
+{{- end }}
+
+{{- partial "art-media.html" . }}
+
+{{- with .Params.tags }}
+<div style="margin-top:1rem;">
+  {{- range . }}<span class="glossary-tag">{{ . }}</span>{{- end }}
+</div>
+{{- end }}
+
+{{- with .Content }}
+<div class="chapter-body" style="margin-top:1.5rem;">
+  {{ . }}
+</div>
+{{- end }}
+
+{{- with .Params.gallery }}
+<div class="art-gallery">
+  {{- range . }}
+  <div class="art-gallery-item">
+    {{- partial "image.html" (dict "src" .src "alt" (.alt | default "") "class" "") }}
+  </div>
+  {{- end }}
+</div>
+{{- end }}
+
+<div style="margin-top:2.5rem;">
+  <a href="{{ "/art/" | relURL }}" class="btn btn-outline">← Back to Art</a>
+</div>
+{{ end }}

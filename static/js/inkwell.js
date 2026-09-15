@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => { if (lightboxImg) lightboxImg.src = ''; }, 300);
   }
 
-  document.querySelectorAll('.inkwell-figure img, .character-gallery-item img').forEach(img => {
+  document.querySelectorAll('.inkwell-figure img, .character-gallery-item img, .art-media img, .art-gallery-item img').forEach(img => {
     img.addEventListener('click', () => openLightbox(img.src, img.alt));
   });
   lightboxClose && lightboxClose.addEventListener('click', closeLightbox);

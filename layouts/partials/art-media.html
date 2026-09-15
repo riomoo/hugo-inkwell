@@ -1,0 +1,55 @@
+{{- /*
+  Partial: art-media.html
+  Renders the primary media of an Art piece on its single page.
+
+  Resolution order: params.video -> params.image -> params.externalURL.
+  An externalURL pointing straight at an image/video file is embedded
+  directly; anything else (a gallery page, a social post, etc.) is shown
+  as a "view on site" link-out card instead.
+*/ -}}
+{{- $p := . -}}
+{{- $videoExts := slice ".mp4" ".mov" ".webm" ".mkv" ".m4v" -}}
+{{- $imageExts := slice ".jpg" ".jpeg" ".png" ".gif" ".webp" ".avif" ".jxl" -}}
+
+{{- if $p.Params.video }}
+<div class="art-media art-media-video">
+  <video controls preload="metadata" playsinline{{ with $p.Params.thumbnail }} poster="{{ . | relURL }}"{{ end }}>
+    <source src="{{ $p.Params.video | relURL }}">
+    Your browser doesn't support embedded video. <a href="{{ $p.Params.video | relURL }}">Download it instead</a>.
+  </video>
+</div>
+
+{{- else if $p.Params.image }}
+<div class="art-media">
+  {{- partial "image.html" (dict "src" $p.Params.image "alt" $p.Title "class" "" "loading" "eager") }}
+</div>
+
+{{- else if $p.Params.externalURL }}
+  {{- $url := $p.Params.externalURL -}}
+  {{- $ext := path.Ext (lower $url) -}}
+  {{- if in $imageExts $ext }}
+  <div class="art-media">
+    <img src="{{ $url }}" alt="{{ $p.Title }}" loading="eager">
+  </div>
+  {{- else if in $videoExts $ext }}
+  <div class="art-media art-media-video">
+    <video controls preload="metadata" playsinline>
+      <source src="{{ $url }}">
+    </video>
+  </div>
+  {{- else }}
+  {{- $host := replaceRE `^[a-zA-Z]+://` "" $url -}}
+  {{- $host = replaceRE `/.*$` "" $host -}}
+  <a href="{{ $url }}" target="_blank" rel="noopener" class="art-media art-media-linkout">
+    {{- with $p.Params.thumbnail }}
+    {{- partial "image.html" (dict "src" . "alt" $p.Title "class" "") }}
+    {{- else }}
+    <div class="art-card-placeholder" style="aspect-ratio:16/10;"><span>🔗</span></div>
+    {{- end }}
+    <div class="art-media-linkout-label">View on {{ $host }} ↗</div>
+  </a>
+  {{- end }}
+
+{{- else }}
+<div class="art-card-placeholder" style="aspect-ratio:16/10;"><span>🎨</span></div>
+{{- end }}

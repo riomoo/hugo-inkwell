@@ -1,0 +1,18 @@
+{{ define "main" }}
+<div class="page-header">
+  <h1>{{ .Title | default "Art" }}</h1>
+  {{- with .Description }}<p class="lead">{{ . }}</p>{{- end }}
+</div>
+{{ .Content }}
+
+{{- $pieces := .Pages.ByWeight -}}
+{{- if gt (len $pieces) 0 }}
+<div class="art-grid">
+  {{- range $pieces }}
+  {{- partial "art-card.html" . }}
+  {{- end }}
+</div>
+{{- else }}
+<p style="color:var(--ink-text-muted);">No art yet — check back soon.</p>
+{{- end }}
+{{ end }}

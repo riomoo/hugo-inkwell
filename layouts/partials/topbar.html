@@ -18,6 +18,9 @@
     <a href="{{ "/characters/" | relURL }}">Characters</a>
     <a href="{{ "/glossary/" | relURL }}">Glossary</a>
     {{- end }}
+    {{- if .Site.Params.enableArt }}
+    <a href="{{ "/art/" | relURL }}"{{ if hasPrefix $.RelPermalink "/art" }} class="active"{{ end }}>Art</a>
+    {{- end }}
     {{- with .Site.Params.paypalURL }}
     <a href="{{ . }}" target="_blank" rel="noopener">Donate</a>
     {{- end }}

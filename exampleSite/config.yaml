@@ -46,6 +46,10 @@ params:
   enableGlossary: true
   enableCharacters: true
 
+  # Art gallery — set true to add "Art" to the top bar and left sidebar nav.
+  # Leave false if you have no art to show; no nav links will render.
+  enableArt: true
+
   # Date format for chapters
   dateFormat: "January 2, 2006"
 
