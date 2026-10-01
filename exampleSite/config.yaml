@@ -27,6 +27,14 @@ params:
   #   - name: "Patreon"
   #     url: "https://patreon.com/yourname"
 
+  # Color theme. Themes live in static/css/themes.css.
+  #   "amber"  — default warm gold
+  #   "indigo" — midnight navy + periwinkle, cream text
+  theme: "amber"
+  # Let readers switch themes from a button in the top bar (remembered per browser).
+  themeSwitcher: false
+  themes: ["amber", "indigo"]   # themes the switcher cycles through
+
   # UI Options
   showReadingProgress: true
   showWordCount: true

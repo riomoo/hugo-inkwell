@@ -1,0 +1,65 @@
+/* ============================================================
+   INKWELL THEME — Alternate color themes
+   Loaded after inkwell.css. The default (amber) palette lives in
+   inkwell.css :root; each block below only overrides colors.
+
+   Select one in config.yaml:   params.theme: "indigo"
+   (or let readers pick with:   params.themeSwitcher: true)
+
+   To make your own, copy a block, rename the data-theme value,
+   and add the name to params.themes.
+   ============================================================ */
+
+/* ── Indigo ───────────────────────────────────────────────────
+   Midnight-navy hood, purple shirt, cream star + hair,
+   with a blush-pink and ember-orange pop from the eyes.
+   Still dark mode.
+   ──────────────────────────────────────────────────────────── */
+:root[data-theme="indigo"] {
+  /* Core palette — deep midnight indigo */
+  --ink-bg:            #0c0a1f;
+  --ink-surface:       #131030;
+  --ink-surface-2:     #1a1640;
+  --ink-surface-3:     #241f52;
+  --ink-border:        #302b64;
+  --ink-border-soft:   #241f4c;
+
+  /* Text — cream from the character's hair and stars */
+  --ink-text:          #e4dde6;
+  --ink-text-muted:    #9b94c4;
+  --ink-text-faint:    #57517f;
+  --ink-text-heading:  #f7ede9;
+
+  /* Accent — periwinkle/lavender (reads well on navy) */
+  --ink-accent:        #a99cf2;
+  --ink-accent-glow:   rgba(169, 156, 242, 0.20);
+  --ink-accent-dim:    rgba(169, 156, 242, 0.09);
+  --ink-accent-bright: #d6cdff;
+  --ink-accent-hover:  #c0b6ff;
+  --ink-accent-shadow: rgba(169, 156, 242, 0.32);
+  --ink-on-accent:     #0e0a2a;
+  --ink-hero-glow:     rgba(130, 112, 230, 0.10);
+
+  /* Secondary accent — blush pink */
+  --ink-rose:          #e79aa0;
+  --ink-rose-dim:      rgba(231, 154, 160, 0.12);
+
+  /* Reading */
+  --ink-reading-bg:    #0f0c26;
+
+  /* Scrollbar */
+  --ink-scrollbar-track:       #0c0a1f;
+  --ink-scrollbar-thumb:       #302b64;
+  --ink-scrollbar-thumb-hover: #433d82;
+
+  --ink-code-color:    #c9c1f5;
+  --ink-overlay:       rgba(12, 10, 31, 0.78);
+
+  /* Callouts */
+  --ink-note:          #7fa6e8;
+  --ink-note-dim:      rgba(127, 166, 232, 0.09);
+  --ink-lore:          #b79df0;
+  --ink-lore-dim:      rgba(183, 157, 240, 0.09);
+  --ink-warn:          #f0a15e;                    /* ember orange, from the eyes */
+  --ink-warn-dim:      rgba(240, 161, 94, 0.09);
+}

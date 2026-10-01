@@ -4,6 +4,21 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
+  // ── Theme Switcher (optional: params.themeSwitcher) ───────
+  const themeBtn = document.getElementById('theme-toggle');
+  if (themeBtn) {
+    let themes = [];
+    try { themes = JSON.parse(themeBtn.dataset.themes); } catch (e) {}
+    themeBtn.addEventListener('click', function () {
+      if (!themes.length) return;
+      const root = document.documentElement;
+      const i = themes.indexOf(root.getAttribute('data-theme'));
+      const next = themes[(i + 1) % themes.length];
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('inkwell-theme', next); } catch (e) {}
+    });
+  }
+
   // ── Reading Progress Bar ──────────────────────────────────
   const progressBar = document.getElementById('reading-progress');
   if (progressBar) {

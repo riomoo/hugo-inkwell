@@ -12,7 +12,7 @@ A dark-mode, book-reader-first Hugo theme built for writing long-form serial fic
 
 ## Features
 
-- Dark mode only: warm amber accents, low-contrast palette that doesn't tire the eyes
+- Dark mode only, with swappable color themes (amber, indigo): warm amber accents by default, low-contrast palette that doesn't tire the eyes
 - Volume > Chapter structure: nested navigation with collapsible sidebar tree
 - Per-volume glossaries: filter entries by volume, tag, or browse alphabetically
 - Character pages: profile images, attribute tables, reference galleries, related characters
@@ -408,6 +408,24 @@ Place `static/css/custom.css` in your site root. Override any CSS variable:
   --ink-bg: #0a0a10;            /* deeper background */
 }
 ```
+
+### Color themes
+
+Themes are sets of CSS variable overrides in `static/css/themes.css`, selected by a `data-theme` attribute on `<html>`. Built in:
+
+| Theme    | Look |
+|----------|------|
+| `amber`  | Default. Warm gold on near-black. |
+| `indigo` | Midnight navy, periwinkle accent, cream text, blush + ember secondary accents. |
+
+```yaml
+params:
+  theme: "indigo"
+  themeSwitcher: true            # optional button in the top bar; choice saved in the browser
+  themes: ["amber", "indigo"]    # themes the button cycles through
+```
+
+To add your own, copy the `indigo` block in `themes.css`, rename `data-theme="..."`, and override whichever `--ink-*` variables you like. You can also put it in your site's `customCSS` file. Every color in the theme now goes through a variable, so nothing is left hardcoded.
 
 ### Fonts
 

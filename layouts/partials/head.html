@@ -90,6 +90,16 @@
 
 <!-- Main CSS -->
 <link rel="stylesheet" href="{{ "css/inkwell.css" | relURL }}">
+<link rel="stylesheet" href="{{ "css/themes.css" | relURL }}">
+{{- if .Site.Params.themeSwitcher }}
+<script>
+  /* Apply the reader's saved theme before first paint (no flash). */
+  try {
+    var t = localStorage.getItem('inkwell-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+</script>
+{{- end }}
 {{- with .Site.Params.customCSS }}
 <link rel="stylesheet" href="{{ . | relURL }}">
 {{- end }}
