@@ -444,14 +444,16 @@ tr:hover td { background: var(--ink-surface-2); }
 }
 
 .sidebar-volume-title {
-  display: flex;
+/*  display: flex;
   align-items: center;
   gap: 0.4rem;
+*/
   font-family: var(--ink-heading-font);
   font-size: 0.8rem;
   letter-spacing: 0.06em;
   color: var(--ink-text);
-  padding: 0.45rem 0.65rem;
+/*  padding: 0.45rem 0.65rem;
+ */
   border-radius: 5px;
   cursor: pointer;
   transition: color var(--ink-transition), background var(--ink-transition);
